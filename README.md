@@ -4,6 +4,8 @@ Editor open source de medios local-first creado por Blackbelt Producciones SpA.
 
 Sitio: [editor.blackbelt.cl](https://editor.blackbelt.cl)
 
+Repositorio: [github.com/aladuuu/editor.blackbelt.cl](https://github.com/aladuuu/editor.blackbelt.cl)
+
 ## Que es
 
 Blackbelt Editor es una herramienta web para editar medios usando los recursos locales del navegador del usuario. La app puede publicarse como sitio estatico, pero los archivos se cargan, procesan y exportan en el browser.

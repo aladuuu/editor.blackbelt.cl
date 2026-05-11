@@ -174,6 +174,29 @@ h1 {
   line-height: 1;
 }
 
+.logo-lockup {
+  display: flex;
+  align-items: center;
+  min-width: 180px;
+}
+
+.logo-lockup img {
+  display: block;
+  width: min(220px, 34vw);
+  max-height: 62px;
+  object-fit: contain;
+  object-position: left center;
+}
+
+.logo-lockup h1 {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
 h2 {
   margin-bottom: 0;
   font-size: 0.94rem;
@@ -607,16 +630,16 @@ select {
 
 .app-footer {
   display: grid;
-  gap: 7px;
+  gap: 3px;
   margin-top: auto;
-  padding: 4px 2px 0;
-  color: var(--muted);
-  font-size: 0.78rem;
+  padding: 2px 2px 0;
+  color: rgba(170, 164, 184, 0.62);
+  font-size: 0.7rem;
   line-height: 1.35;
 }
 
 .app-footer a {
-  color: var(--accent-strong);
+  color: rgba(199, 162, 255, 0.72);
   text-decoration: none;
 }
 
