@@ -8,8 +8,8 @@
       content="Editor open source de medios que procesa imagenes localmente en el navegador."
     />
     <meta name="theme-color" content="#0b0911" />
-    <title>Blackbelt Editor</title>
-    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <title>EDITOR</title>
+    <link rel="icon" href="./assets/eye.png" type="image/svg+xml" />
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
     <link
       rel="stylesheet"
@@ -22,7 +22,7 @@
   <body>
     <div class="app-shell">
       <aside class="rail" aria-label="Herramientas principales">
-        <div class="brand-mark" aria-label="Blackbelt Editor">BB</div>
+        <div class="brand-mark" aria-label="Blackbelt Editor">🔴</div>
         <button class="rail-button is-active" type="button" title="Imagen">
           <i class="fa-solid fa-image" aria-hidden="true"></i>
         </button>
@@ -46,15 +46,17 @@
           <div class="topbar-actions">
             <label class="button button-primary" for="file-input">
               <i class="fa-solid fa-folder-open" aria-hidden="true"></i>
-              Abrir imagen
             </label>
             <button class="button" id="reset-button" type="button" disabled>
               <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
-              Reset
+              
             </button>
             <button class="button" id="download-button" type="button" disabled>
               <i class="fa-solid fa-download" aria-hidden="true"></i>
-              Descargar
+              
+            </button>
+            <button class="icon-button panel-toggle" id="inspector-toggle" type="button" title="Abrir o cerrar panel de ajustes" aria-expanded="true">
+              <i class="fa-solid fa-table-columns" aria-hidden="true"></i>
             </button>
             <input id="file-input" type="file" accept="image/*" />
           </div>
@@ -81,6 +83,18 @@
               <button class="icon-button" id="padding-toggle" type="button" title="Margen de lienzo" disabled>
                 <i class="fa-solid fa-up-right-and-down-left-from-center" aria-hidden="true"></i>
               </button>
+              <button class="icon-button" id="resize-toggle" type="button" title="Cambiar tamaño" disabled>
+                <i class="fa-solid fa-maximize" aria-hidden="true"></i>
+              </button>
+              <button class="icon-button" id="text-toggle" type="button" title="Texto" disabled>
+                <i class="fa-solid fa-font" aria-hidden="true"></i>
+              </button>
+              <button class="icon-button" id="watermark-toggle" type="button" title="Marca de agua" disabled>
+                <i class="fa-solid fa-stamp" aria-hidden="true"></i>
+              </button>
+              <button class="icon-button" id="compare-toggle" type="button" title="Antes y despues" disabled>
+                <i class="fa-solid fa-circle-half-stroke" aria-hidden="true"></i>
+              </button>
               <button class="icon-button crop-action" id="crop-apply" type="button" title="Aplicar recorte" disabled>
                 <i class="fa-solid fa-check" aria-hidden="true"></i>
               </button>
@@ -90,11 +104,11 @@
             </div>
             <div class="crop-inline" id="crop-inline" aria-hidden="true">
               <label class="toolbar-number">
-                <span>Ancho</span>
+                <span title="Ancho"><i class="fa-solid fa-arrows-left-right" aria-hidden="true"></i></span>
                 <input id="crop-width" type="text" inputmode="numeric" placeholder="0px" disabled />
               </label>
               <label class="toolbar-number">
-                <span>Alto</span>
+                <span title="Alto"><i class="fa-solid fa-arrows-up-down" aria-hidden="true"></i></span>
                 <input id="crop-height" type="text" inputmode="numeric" placeholder="0px" disabled />
               </label>
               <button class="icon-button" id="crop-center" type="button" title="Centrar recorte" disabled>
@@ -103,23 +117,22 @@
             </div>
             <div class="padding-inline" id="padding-inline" aria-hidden="true">
               <label class="toolbar-number">
-                <span>Arriba</span>
+                <span title="Arriba"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></span>
                 <input id="canvas-padding-top" type="text" inputmode="numeric" value="0px" disabled />
               </label>
               <label class="toolbar-number">
-                <span>Der.</span>
+                <span title="Derecha"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
                 <input id="canvas-padding-right" type="text" inputmode="numeric" value="0px" disabled />
               </label>
               <label class="toolbar-number">
-                <span>Abajo</span>
+                <span title="Abajo"><i class="fa-solid fa-arrow-down" aria-hidden="true"></i></span>
                 <input id="canvas-padding-bottom" type="text" inputmode="numeric" value="0px" disabled />
               </label>
               <label class="toolbar-number">
-                <span>Izq.</span>
+                <span title="Izquierda"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></span>
                 <input id="canvas-padding-left" type="text" inputmode="numeric" value="0px" disabled />
               </label>
               <label class="toolbar-color" title="Fondo">
-                <span>Fondo</span>
                 <input id="canvas-background" type="color" value="#000000" disabled />
               </label>
               <label class="toolbar-check">
@@ -127,11 +140,73 @@
                 <span>Transparente</span>
               </label>
             </div>
+            <div class="resize-inline" id="resize-inline" aria-hidden="true">
+              <label class="toolbar-number">
+                <span title="Ancho"><i class="fa-solid fa-arrows-left-right" aria-hidden="true"></i></span>
+                <input id="resize-width" type="text" inputmode="numeric" placeholder="0px" disabled />
+              </label>
+              <label class="toolbar-number">
+                <span title="Alto"><i class="fa-solid fa-arrows-up-down" aria-hidden="true"></i></span>
+                <input id="resize-height" type="text" inputmode="numeric" placeholder="0px" disabled />
+              </label>
+              <button class="icon-button" id="resize-lock" type="button" title="Mantener proporcion" disabled>
+                <i class="fa-solid fa-lock" aria-hidden="true"></i>
+              </button>
+              <select id="resize-preset" class="toolbar-select" disabled>
+                <option value="">Preset</option>
+                <option value="original">Original</option>
+                <option value="1080x1080">1080x1080</option>
+                <option value="1920x1080">1920x1080</option>
+                <option value="1200x630">1200x630</option>
+                <option value="1080x1920">1080x1920</option>
+              </select>
+              <button class="icon-button crop-action" id="resize-apply" type="button" title="Aplicar tamaño" disabled>
+                <i class="fa-solid fa-check" aria-hidden="true"></i>
+              </button>
+            </div>
+            <div class="text-inline" id="text-inline" aria-hidden="true">
+              <label class="toolbar-text">
+                <input id="overlay-text" type="text" placeholder="Escribe aqui" disabled />
+              </label>
+              <label class="toolbar-number">
+                <span title="Tamano"><i class="fa-solid fa-text-height" aria-hidden="true"></i></span>
+                <input class="toolbar-size-input" id="overlay-size" type="text" inputmode="numeric" value="64px" disabled />
+              </label>
+              <select id="overlay-font" class="toolbar-select toolbar-font-select" title="Fuente" disabled>
+                <option value="system">Sistema</option>
+                <option value="display">Display</option>
+                <option value="serif">Serif</option>
+                <option value="mono">Mono</option>
+                <option value="condensed">Condensed</option>
+              </select>
+              <label class="toolbar-color" title="Color">
+                <input id="overlay-color" type="color" value="#ffffff" disabled />
+              </label>
+              <label class="toolbar-number">
+                <span title="Opacidad"><i class="fa-solid fa-circle-half-stroke" aria-hidden="true"></i></span>
+                <input class="toolbar-percent-input" id="overlay-opacity" type="text" inputmode="decimal" value="100%" disabled />
+              </label>
+              <button class="icon-button crop-action" id="overlay-add-text" type="button" title="Agregar texto" disabled>
+                <i class="fa-solid fa-font" aria-hidden="true"></i>
+              </button>
+            </div>
+            <div class="watermark-inline" id="watermark-inline" aria-hidden="true">
+              <label class="button file-action-button" title="Agregar imagen como marca de agua">
+                <i class="fa-solid fa-upload" aria-hidden="true"></i>
+                <input id="watermark-input" type="file" accept="image/*" disabled />
+              </label>
+              <label class="toolbar-number">
+                <span title="Opacidad"><i class="fa-solid fa-circle-half-stroke" aria-hidden="true"></i></span>
+                <input class="toolbar-percent-input" id="watermark-opacity" type="text" inputmode="decimal" value="100%" disabled />
+              </label>
+            </div>
             <div class="zoom-readout" id="image-readout">Sin archivo</div>
           </div>
 
           <div class="canvas-wrap" id="drop-zone">
             <canvas id="editor-canvas" width="1280" height="720"></canvas>
+            <div class="overlay-layer" id="overlay-layer" aria-hidden="true"></div>
+            <div class="compare-divider" id="compare-divider" aria-hidden="true"></div>
             <div class="crop-selection" id="crop-selection" aria-hidden="true">
               <span class="crop-handle crop-handle-nw" data-crop-handle="nw"></span>
               <span class="crop-handle crop-handle-n" data-crop-handle="n"></span>
@@ -214,7 +289,7 @@
         <div class="modal-heading">
           <div>
             <p class="modal-kicker">Preparar descarga</p>
-            <h2 id="download-title">¿En qué formato quieres descargar?</h2>
+            <h2 id="download-title">Formato y calidad</h2>
           </div>
           <button class="ghost-button" id="download-modal-close" type="button" title="Cerrar">
             <i class="fa-solid fa-xmark" aria-hidden="true"></i>
@@ -263,7 +338,6 @@
           <button class="button" id="download-modal-cancel" type="button">Cancelar</button>
           <button class="button button-primary" id="download-confirm" type="button" disabled>
             <i class="fa-solid fa-download" aria-hidden="true"></i>
-            Descargar
           </button>
         </div>
       </section>

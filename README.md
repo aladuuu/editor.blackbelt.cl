@@ -26,7 +26,11 @@ Blackbelt Editor es una herramienta web para editar medios usando los recursos l
 - Rotar y voltear.
 - Crop con inputs, seleccion arrastrable y manillas de resize.
 - Margen de lienzo por borde, con fondo transparente o color.
+- Resize con proporcion bloqueable y presets rapidos.
+- Texto y marca de agua como capas arrastrables.
+- Comparador antes/despues con divisor sobre el canvas.
 - Modal de descarga con formato, calidad, peso original y peso estimado.
+- Restauracion local de la ultima sesion con localStorage e IndexedDB.
 - Exportacion a PNG, JPEG y WebP.
 
 ## Open Source
@@ -43,7 +47,6 @@ La idea central del proyecto es ofrecer herramientas de edicion de medios que re
 
 ## Roadmap
 
-- Resize con presets.
 - Procesamiento por lotes.
 - Editor GIF con extraccion y recompresion de frames.
 - Video local con WebCodecs y FFmpeg WASM como fallback.
