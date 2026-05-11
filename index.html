@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Editor open source de medios que procesa imagenes localmente en el navegador."
+    />
+    <meta name="theme-color" content="#0b0911" />
+    <title>Blackbelt Editor</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="rail" aria-label="Herramientas principales">
+        <div class="brand-mark" aria-label="Blackbelt Editor">BB</div>
+        <button class="rail-button is-active" type="button" title="Imagen">
+          <i class="fa-solid fa-image" aria-hidden="true"></i>
+        </button>
+        <button class="rail-button" type="button" title="Video experimental" disabled>
+          <i class="fa-solid fa-film" aria-hidden="true"></i>
+        </button>
+        <button class="rail-button" type="button" title="GIF experimental" disabled>
+          <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+        </button>
+        <button class="rail-button" type="button" title="Batch experimental" disabled>
+          <i class="fa-solid fa-table-cells-large" aria-hidden="true"></i>
+        </button>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Local-first media tools</p>
+            <h1>Blackbelt Editor</h1>
+          </div>
+          <div class="topbar-actions">
+            <label class="button button-primary" for="file-input">
+              <i class="fa-solid fa-folder-open" aria-hidden="true"></i>
+              Abrir imagen
+            </label>
+            <button class="button" id="reset-button" type="button" disabled>
+              <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
+              Reset
+            </button>
+            <button class="button" id="download-button" type="button" disabled>
+              <i class="fa-solid fa-download" aria-hidden="true"></i>
+              Descargar
+            </button>
+            <input id="file-input" type="file" accept="image/*" />
+          </div>
+        </header>
+
+        <section class="stage-section" aria-label="Lienzo de edicion">
+          <div class="stage-toolbar">
+            <div class="segmented" role="group" aria-label="Transformaciones">
+              <button class="icon-button" id="rotate-left" type="button" title="Girar izquierda" disabled>
+                <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
+              </button>
+              <button class="icon-button" id="rotate-right" type="button" title="Girar derecha" disabled>
+                <i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
+              </button>
+              <button class="icon-button" id="flip-x" type="button" title="Voltear horizontal" disabled>
+                <i class="fa-solid fa-arrows-left-right" aria-hidden="true"></i>
+              </button>
+              <button class="icon-button" id="flip-y" type="button" title="Voltear vertical" disabled>
+                <i class="fa-solid fa-arrows-up-down" aria-hidden="true"></i>
+              </button>
+              <button class="icon-button" id="crop-toggle" type="button" title="Recortar" disabled>
+                <i class="fa-solid fa-crop-simple" aria-hidden="true"></i>
+              </button>
+              <button class="icon-button" id="padding-toggle" type="button" title="Margen de lienzo" disabled>
+                <i class="fa-solid fa-up-right-and-down-left-from-center" aria-hidden="true"></i>
+              </button>
+              <button class="icon-button crop-action" id="crop-apply" type="button" title="Aplicar recorte" disabled>
+                <i class="fa-solid fa-check" aria-hidden="true"></i>
+              </button>
+              <button class="icon-button crop-action" id="crop-cancel" type="button" title="Cancelar recorte" disabled>
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+              </button>
+            </div>
+            <div class="crop-inline" id="crop-inline" aria-hidden="true">
+              <label class="toolbar-number">
+                <span>Ancho</span>
+                <input id="crop-width" type="text" inputmode="numeric" placeholder="0px" disabled />
+              </label>
+              <label class="toolbar-number">
+                <span>Alto</span>
+                <input id="crop-height" type="text" inputmode="numeric" placeholder="0px" disabled />
+              </label>
+              <button class="icon-button" id="crop-center" type="button" title="Centrar recorte" disabled>
+                <i class="fa-solid fa-crosshairs" aria-hidden="true"></i>
+              </button>
+            </div>
+            <div class="padding-inline" id="padding-inline" aria-hidden="true">
+              <label class="toolbar-number">
+                <span>Arriba</span>
+                <input id="canvas-padding-top" type="text" inputmode="numeric" value="0px" disabled />
+              </label>
+              <label class="toolbar-number">
+                <span>Der.</span>
+                <input id="canvas-padding-right" type="text" inputmode="numeric" value="0px" disabled />
+              </label>
+              <label class="toolbar-number">
+                <span>Abajo</span>
+                <input id="canvas-padding-bottom" type="text" inputmode="numeric" value="0px" disabled />
+              </label>
+              <label class="toolbar-number">
+                <span>Izq.</span>
+                <input id="canvas-padding-left" type="text" inputmode="numeric" value="0px" disabled />
+              </label>
+              <label class="toolbar-color" title="Fondo">
+                <span>Fondo</span>
+                <input id="canvas-background" type="color" value="#000000" disabled />
+              </label>
+              <label class="toolbar-check">
+                <input id="canvas-transparent" type="checkbox" checked disabled />
+                <span>Transparente</span>
+              </label>
+            </div>
+            <div class="zoom-readout" id="image-readout">Sin archivo</div>
+          </div>
+
+          <div class="canvas-wrap" id="drop-zone">
+            <canvas id="editor-canvas" width="1280" height="720"></canvas>
+            <div class="crop-selection" id="crop-selection" aria-hidden="true">
+              <span class="crop-handle crop-handle-nw" data-crop-handle="nw"></span>
+              <span class="crop-handle crop-handle-n" data-crop-handle="n"></span>
+              <span class="crop-handle crop-handle-ne" data-crop-handle="ne"></span>
+              <span class="crop-handle crop-handle-e" data-crop-handle="e"></span>
+              <span class="crop-handle crop-handle-se" data-crop-handle="se"></span>
+              <span class="crop-handle crop-handle-s" data-crop-handle="s"></span>
+              <span class="crop-handle crop-handle-sw" data-crop-handle="sw"></span>
+              <span class="crop-handle crop-handle-w" data-crop-handle="w"></span>
+            </div>
+            <div class="empty-state" id="empty-state">
+              <i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i>
+              <strong>Suelta una imagen aqui</strong>
+              <span>El archivo queda en tu navegador. No se sube a ningun servidor.</span>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <aside class="inspector" aria-label="Panel de ajustes">
+        <section class="panel">
+          <div class="panel-heading">
+            <h2>Ajustes</h2>
+            <button class="ghost-button" id="undo-button" type="button" title="Deshacer" disabled>
+              <i class="fa-solid fa-arrow-rotate-left" aria-hidden="true"></i>
+            </button>
+          </div>
+
+          <label class="control">
+            <span>Brillo</span>
+            <output id="brightness-value">100%</output>
+            <input id="brightness" type="range" min="0" max="200" value="100" disabled />
+          </label>
+
+          <label class="control">
+            <span>Contraste</span>
+            <output id="contrast-value">100%</output>
+            <input id="contrast" type="range" min="0" max="200" value="100" disabled />
+          </label>
+
+          <label class="control">
+            <span>Saturacion</span>
+            <output id="saturation-value">100%</output>
+            <input id="saturation" type="range" min="0" max="220" value="100" disabled />
+          </label>
+
+          <label class="control">
+            <span>Temperatura</span>
+            <output id="temperature-value">0</output>
+            <input id="temperature" type="range" min="-100" max="100" value="0" disabled />
+          </label>
+
+          <label class="control">
+            <span>Viñeta</span>
+            <output id="vignette-value">0%</output>
+            <input id="vignette" type="range" min="0" max="90" value="0" disabled />
+          </label>
+        </section>
+
+        <section class="panel roadmap">
+          <div class="panel-heading">
+            <h2>Modulos</h2>
+          </div>
+          <p>Imagen activo. Video, GIF, audio y batch quedan preparados como extensiones del mismo motor local.</p>
+        </section>
+
+        <footer class="app-footer">
+          <span>Open source · MIT</span>
+          <a href="https://editor.blackbelt.cl" target="_blank" rel="noreferrer">editor.blackbelt.cl</a>
+          <span>Autor: Blackbelt Producciones SpA</span>
+        </footer>
+      </aside>
+    </div>
+
+    <div class="modal-backdrop" id="download-modal" aria-hidden="true">
+      <section class="download-modal" role="dialog" aria-modal="true" aria-labelledby="download-title">
+        <div class="modal-heading">
+          <div>
+            <p class="modal-kicker">Preparar descarga</p>
+            <h2 id="download-title">¿En qué formato quieres descargar?</h2>
+          </div>
+          <button class="ghost-button" id="download-modal-close" type="button" title="Cerrar">
+            <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+          </button>
+        </div>
+        <dl class="file-summary">
+          <div>
+            <dt>Archivo</dt>
+            <dd id="summary-file-name">-</dd>
+          </div>
+          <div>
+            <dt>Original</dt>
+            <dd id="summary-original">-</dd>
+          </div>
+          <div>
+            <dt>Salida</dt>
+            <dd id="summary-output">-</dd>
+          </div>
+          <div>
+            <dt>Peso estimado</dt>
+            <dd id="summary-estimated">Calculando...</dd>
+          </div>
+          <div>
+            <dt>Cambio</dt>
+            <dd id="summary-delta">-</dd>
+          </div>
+          <div>
+            <dt>Fondo</dt>
+            <dd id="summary-background">-</dd>
+          </div>
+        </dl>
+        <label class="select-control">
+          <span>Formato</span>
+          <select id="format-select" disabled>
+            <option value="image/png">PNG</option>
+            <option value="image/jpeg">JPEG</option>
+            <option value="image/webp">WebP</option>
+          </select>
+        </label>
+        <label class="control">
+          <span>Calidad</span>
+          <output id="quality-value">92%</output>
+          <input id="quality" type="range" min="40" max="100" value="92" disabled />
+        </label>
+        <div class="modal-actions">
+          <button class="button" id="download-modal-cancel" type="button">Cancelar</button>
+          <button class="button button-primary" id="download-confirm" type="button" disabled>
+            <i class="fa-solid fa-download" aria-hidden="true"></i>
+            Descargar
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <script src="./app.js" type="module"></script>
+  </body>
+</html>
